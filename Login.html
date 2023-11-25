@@ -26,6 +26,34 @@
     />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      function login() {
+        const username = document.getElementById('formUser').value;
+        const password = document.getElementById('formPass').value;
+  
+        // Make an AJAX request to your API for authentication
+        $.ajax({
+          url: 'http://localhost:3000/api/v1/signin',
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ username, password }),
+          success: function(response) {
+            // Assuming your API returns a token in the response
+            // Set the token as a cookie (you may need to adjust this based on your backend)
+            document.cookie = `token=${response.token}; path=/`;
+  
+            // Redirect to the Dashboard.html
+            window.location.href = 'Dashboard.html';
+          },
+          error: function(error) {
+            // Handle authentication failure
+            console.error('Authentication failed:', error.responseJSON.message);
+            alert('Authentication failed. Please check your credentials.');
+          }
+        });
+      }
+    </script>
   </head>
   <body id="page-top">
     <!-- Navigation-->
@@ -76,7 +104,7 @@
                 </div>
                 <div class="col-md-6 col-lg-7 d-flex align-items-center">
                   <div class="card-body p-4 p-lg-5 text-black">
-                    <form>
+                    <form id="loginForm">
                       <div class="d-flex align-items-center mb-3 pb-1">
                         <span class="h1 fw-bold mb-0">Tome</span>
                       </div>
@@ -95,11 +123,8 @@
                           class="form-control form-control-lg"
                           required
                         />
-                        <label class="form-label" for="formUser"
-                          >Username</label
-                        >
+                        <label class="form-label" for="formUser">Username</label>
                       </div>
-
                       <div class="form-outline mb-4">
                         <input
                           type="password"
@@ -107,18 +132,10 @@
                           class="form-control form-control-lg"
                           required
                         />
-                        <label class="form-label" for="formPass"
-                          >Password</label
-                        >
+                        <label class="form-label" for="formPass">Password</label>
                       </div>
-
                       <div class="pt-1 mb-4">
-                        <button
-                          class="btn btn-dark btn-lg btn-block"
-                          type="button"
-                        >
-                          Login
-                        </button>
+                        <button class="btn btn-dark btn-lg btn-block" type="button" onclick="login()">Login</button>
                       </div>
                       <a class="small text-muted" href="#!">Forgot password?</a>
                       <a href="#!" class="small text-muted">Terms of use.</a>
